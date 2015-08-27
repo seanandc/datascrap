@@ -15,7 +15,7 @@ setup(
     ],
     keywords='experimental',
     packages=find_packages(exclude=['docs',]),
-    install_requires=['requests>=2.7.0','beautifulsoup4>=4.4.0'],
+    install_requires=['requests>=2.7.0','beautifulsoup4>=4.4.0', 'mock>=1.2.0', 'nose>=1.3.7'],
     # pip install -e .['dev','test]
     extras_require={
         'dev': [],
