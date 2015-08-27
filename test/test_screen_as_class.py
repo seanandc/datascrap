@@ -1,6 +1,30 @@
 import unittest
+from requests.exceptions import HTTPError
 from datascrap.screens import StockScreen
 import os
+from mock import patch
+import requests
+from requests import Response
+
+class ResponseStatus500 (Response):
+
+    def __init__(self):
+        self.reason = ""
+        self.status_code = 500
+
+class ResponseStatus400 (Response):
+
+    def __init__(self):
+        self.reason = ""
+        self.status_code = 400
+
+class ResponseStatus200 (Response):
+
+    def __init__(self, yahoo_finance_html_path, test_stock):
+        self.reason = ""
+        self.status_code = 200
+
+        self.text = open(yahoo_finance_html_path%test_stock,"r").read()
 
 
 class TestScreenParsingAndOutput(unittest.TestCase):
@@ -116,6 +140,37 @@ class TestScreenParsingAndOutput(unittest.TestCase):
 
             # ASSERT
             self.assertTrue(screen_output)
+
+
+    @patch.object(requests, "get")
+    def test_yahoo_keystats_fail500(self, mockget):
+        mockget.return_value = ResponseStatus500()
+        screen = StockScreen(100)
+        test = False
+        try:
+            screen.yahooKeyStats('aa')
+
+        except HTTPError:
+            test = True
+
+        self.assertEqual(test, True)
+        #self.assertRaises(HTTPError, screen.yahooKeyStats, *('aa',))
+
+
+    @patch.object(requests, "get")
+    def test_yahoo_keystats_fail400(self, mockget):
+        mockget.return_value = ResponseStatus400()
+        screen = StockScreen(100)
+        self.assertRaises(HTTPError, screen.yahooKeyStats, *('aa',))
+
+    @patch.object(requests, "get")
+    def test_yahoo_keystats_success200(self, mockget):
+        mockget.return_value = ResponseStatus200(self.yahoo_finance_html_path, 'aci')
+        screen = StockScreen(100)
+        expected_screen_output = "price to book ratio: aci, 0.05\nPEG ration: aci -0.01\n"
+        output = screen.yahooKeyStats('aci')
+        self.assertEqual(expected_screen_output, output)
+        #self.assertRaises(HTTPError, screen.yahooKeyStats, *('aa',))
 
 
     @unittest.skip("TODO: need to test for failure with mock")
