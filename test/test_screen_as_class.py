@@ -23,8 +23,8 @@ class ResponseStatus200 (Response):
     def __init__(self, yahoo_finance_html_path, test_stock):
         self.reason = ""
         self.status_code = 200
-
-        self.text = open(yahoo_finance_html_path%test_stock,"r").read()
+        self.encoding = 'UTF-8'
+        self._content = open(yahoo_finance_html_path%test_stock,"r").read()
 
 
 class TestScreenParsingAndOutput(unittest.TestCase):
@@ -170,7 +170,6 @@ class TestScreenParsingAndOutput(unittest.TestCase):
         expected_screen_output = "price to book ratio: aci, 0.05\nPEG ration: aci -0.01\n"
         output = screen.yahooKeyStats('aci')
         self.assertEqual(expected_screen_output, output)
-        #self.assertRaises(HTTPError, screen.yahooKeyStats, *('aa',))
 
 
     @unittest.skip("TODO: need to test for failure with mock")
