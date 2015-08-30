@@ -1,7 +1,7 @@
 # DataScrap
 
 ## What is it?
-This project is for educational and informational purposes only. nothing contained in this series should be construed as an inviatation or solicitation to buy or sell any security.
+This project is for educational and informational purposes only. Nothing contained in this project should be construed as an inviatation or solicitation to buy or sell any security.
 
 This this a simple stock screener module that scrap yahoo finance for part of S&P500 stocks that has company P/B ratio that is lower than user input.
 ## Installation
